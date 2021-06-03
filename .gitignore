@@ -1,0 +1,8 @@
+# Infrastructure
+/docker
+/docker-compose.yml
+.idea/
+
+# Package
+/vendor/
+

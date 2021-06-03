@@ -1,0 +1,22 @@
+{
+    "name": "konorws/sms-mode",
+    "description": "Library for work with SmsMode HTTP API",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mykhailo YATSYHSYN",
+            "email": "myyat@mirko.in.ua"
+        }
+    ],
+    "require": {
+        "php": ">= 7.2",
+        "ext-curl": "*",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SMSMode\\": "./src/"
+        }
+    }
+}
