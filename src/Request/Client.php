@@ -58,7 +58,7 @@ class Client
         $result = $this->guzzleClient->post(
             $this->getURLByPath($path),
             [
-                "body" => http_build_query($params),
+                "form_params" => $params,
             ]
         );
 

@@ -1,8 +1,21 @@
 <?php
 require_once './vendor/autoload.php';
 
-$token = '83igEIIfdLgupYepFtbCht8doIwPtAl8';
+$token = '';
 
-$smsMode = new \SMSMode\SMSMode($token);
+$smsMode = new \SMSMode\SMSMode($token, "YOU sender");
 
-$smsMode->getBalance();
+$balance = $smsMode->getBalance();
+var_dump($balance);
+
+$sms = $smsMode->sendSimple(
+    ["you number"],
+    "Hello. This test message from SMSMode",
+);
+var_dump($sms);
+
+$balance = $smsMode->getBalance();
+var_dump($balance);
+
+$status = $smsMode->checkStatus('YUeG9dXiDkyA');
+var_dump($status);
