@@ -4,6 +4,7 @@ namespace SMSMode;
 
 use SMSMode\Exception\RequestException;
 use SMSMode\Request\Client;
+use SMSMode\Request\Message;
 use SMSMode\Request\Response;
 
 /**
@@ -16,9 +17,6 @@ class SMSMode
 {
     const API_URL = 'https://api.smsmode.com/http/';
     const API_VERSION = '1.6';
-
-    const CLASSE_MSG__PRO = 2;
-    const CLASSE_MSG__WITH_FEEDBACK = 4;
 
     /** @var Client */
     private $client;
@@ -42,7 +40,7 @@ class SMSMode
     public function __construct(
         string $accessToken,
         string $senderName,
-        int $messageClasse = self::CLASSE_MSG__PRO
+        int $messageClasse = Message::CLASSE_MSG__PRO
     ) {
         $this->client = new Client($accessToken, self::API_URL, self::API_VERSION);
 
@@ -83,11 +81,43 @@ class SMSMode
     }
 
     /**
+     * @param Message $message
+     *
+     * @return Response
+     */
+    public function sendSMS(Message $message)
+    {
+        $this->prepareMessage($message);
+
+        $requestBody = $message->buildRequestBody();
+        var_dump($requestBody);
+        $result = $this->client->requestExecute("sendSMS", $requestBody);
+
+        return new Response($result);
+    }
+
+    /**
+     * Delete message by Id
+     *
+     * @param string $smsID
+     *
+     * @return array
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function deleteSMS(string $smsID): array
+    {
+        $result = $this->client->requestExecute("deleteSMS", [
+            "smsID" => $smsID
+        ]);
+
+        return $this->simpleResponse($result);
+    }
+
+    /**
      * @param string $smsID
      *
      * @return Response
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function checkStatus(string $smsID)
     {
@@ -113,6 +143,43 @@ class SMSMode
 
         if(strlen($senderName) > 11) {
             throw new RequestException("Invalid config, sender name max 11 characters");
+        }
+    }
+
+    /**
+     * @param string $response
+     * @return array
+     */
+    private function simpleResponse(string $response): array
+    {
+        $responseData = [
+            "status" => false,
+            "message" => null,
+            "code" => null,
+        ];
+
+        $items = explode("|", $response);
+        if(!$items || count($items) < 2) {
+            return $responseData;
+        }
+
+        $responseData['code'] = (int)$items[0];
+        $responseData['message'] = trim($items[1]);
+
+        if($responseData['code'] === 0) {
+            $responseData['status'] = true;
+        }
+
+        return $responseData;
+    }
+
+    /**
+     * @param Message $message
+     */
+    private function prepareMessage(Message $message)
+    {
+        if(!$message->hasSender()) {
+            $message->setSender($this->sender);
         }
     }
 }

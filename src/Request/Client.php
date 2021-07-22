@@ -3,6 +3,7 @@
 namespace SMSMode\Request;
 
 use GuzzleHttp\Client as ClientGuzzle;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
  * Class Client
@@ -50,17 +51,19 @@ class Client
      * @param array|null $params
      *
      * @return string
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function requestExecute(string $path, ?array $params = [])
+    public function requestExecute(string $path, ?array $params = []): string
     {
-        $result = $this->guzzleClient->post(
-            $this->getURLByPath($path),
-            [
-                "form_params" => $params,
-            ]
-        );
+        try {
+            $result = $this->guzzleClient->post(
+                $this->getURLByPath($path),
+                [
+                    "form_params" => $params,
+                ]
+            );
+        } catch (GuzzleException $e) {
+            return "-1 | ". $e->getMessage();
+        }
 
         return $result->getBody()->getContents();
     }
@@ -69,7 +72,7 @@ class Client
      * @param string $path
      * @return string
      */
-    protected function getURLByPath(string $path)
+    protected function getURLByPath(string $path): string
     {
         return $this->apiURL . $path . ".do?accessToken=".$this->accessToken;
     }

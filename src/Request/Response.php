@@ -22,6 +22,7 @@ class Response
     const STATUS__PARTIALLY_DELIVERED = 15;
     const STATUS__DELIVERY_ERROR = 39;
     const STATUS__BALANCE_ERROR = 33;
+    const STATUS__SMS_NOT_FOUND = 61;
     const STATUS__UNDEFINED_ERROR = 3599;
     const STATUS__INVALID_NUMBER_ERROR = 398;
     const STATUS__RECIPIENT_BLACKLIST = 3999;
@@ -44,6 +45,7 @@ class Response
         self::STATUS__DELIVERED => 'Delivered',
         self::STATUS__BALANCE_ERROR => 'Balance insuffisants',
         self::STATUS__PARTIALLY_DELIVERED => 'Partially Delivered',
+        self::STATUS__SMS_NOT_FOUND => 'SMS not found or Deleted',
         self::STATUS__DELIVERY_ERROR => 'Delivered error',
         self::STATUS__UNDEFINED_ERROR => 'Undefined error',
         self::STATUS__INVALID_NUMBER_ERROR => 'Invalid phone number error',
