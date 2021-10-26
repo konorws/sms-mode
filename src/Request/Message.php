@@ -52,6 +52,7 @@ class Message
      */
     public function setMessage(string $message): Message
     {
+        $message = mb_convert_encoding($message, "ISO-8859-15");
         $this->message = $message;
 
         return $this;
@@ -64,6 +65,8 @@ class Message
      */
     public function addPhoneNumber(string $phoneNumber): Message
     {
+        $phoneNumber = str_replace("+", "", $phoneNumber);
+
         $this->phoneNumbers[$phoneNumber] = $phoneNumber;
 
         return $this;
@@ -84,6 +87,10 @@ class Message
     public function setPhoneNumbers(array $phoneNumbers): Message
     {
         foreach ($phoneNumbers as $phoneNumber) {
+            if(empty($phoneNumber)) {
+                continue;
+            }
+
             $this->addPhoneNumber($phoneNumber);
         }
 
