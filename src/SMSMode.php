@@ -68,6 +68,8 @@ class SMSMode
      */
     public function sendSimple(array $phones, string $message): Response
     {
+        $message = mb_convert_encoding($message, "ISO-8859-15");
+
         $requestBody = [
             'message' => $message,
             'numero' => implode(",", $phones),
@@ -90,7 +92,6 @@ class SMSMode
         $this->prepareMessage($message);
 
         $requestBody = $message->buildRequestBody();
-        var_dump($requestBody);
         $result = $this->client->requestExecute("sendSMS", $requestBody);
 
         return new Response($result);

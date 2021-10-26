@@ -95,6 +95,15 @@ class Response
     }
 
     /**
+     * @return bool
+     */
+    public function isSuccess(): bool
+    {
+        return $this->getActionStatus() === self::ACTION_STATUS__SUCCESS
+            || $this->getActionStatus() === self::ACTION_STATUS__PROGRESS;
+    }
+
+    /**
      * @return int
      */
     public function getStatus(): int
